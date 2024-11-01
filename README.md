@@ -13,3 +13,5 @@ Currently, two official plugins are available:
 # Dependencies
 
 - npm install --save react-toastify
+
+- npm install uuid

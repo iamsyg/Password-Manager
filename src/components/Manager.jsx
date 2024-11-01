@@ -3,9 +3,10 @@ import { useRef } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { v4 as uuidv4 } from 'uuid';
 
 const Manager = () => {
   const ref = useRef();
@@ -33,27 +34,47 @@ const Manager = () => {
     }
   };
 
-  const copyText=(text) => {
-    toast('Copied', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light"
-        });
+  const copyText = (text) => {
+    toast("Copied", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
     navigator.clipboard.writeText(text);
-  }
-  
+  };
 
   const savePassword = () => {
     console.log(form);
-    setPasswordArray([...passwordArray, form]);
-    localStorage.setItem("password", JSON.stringify([...passwordArray, form]));
+    setPasswordArray([...passwordArray, {...form, id:uuidv4()}]);
+    localStorage.setItem("password", JSON.stringify([...passwordArray, {...form, id:uuidv4()}]));
     console.log([...passwordArray, form]);
   };
+
+
+  const deletePassword = (id) => {
+    let newPassword=passwordArray.filter(item=>{
+        return item.id!==id;
+      });
+  
+      setPasswordArray(newPassword);
+      localStorage.setItem("passwords", JSON.stringify(passwordArray.filter(item=>item.id!==id)));
+  }
+
+  const editPassword =(id) => {
+    let t=passwordArray.filter(i=>i.id===id)
+    setform(t[0]);
+    let newPass=passwordArray.filter(item=>{
+        return item.id!==id;
+      });
+  
+      setPasswordArray(newPass);
+  }
+  
 
   const handleChange = (e) => {
     setform({ ...form, [e.target.name]: e.target.value });
@@ -61,21 +82,21 @@ const Manager = () => {
 
   return (
     <>
-    <ToastContainer
-    position="top-right"
-    autoClose={5000}
-    hideProgressBar={false}
-    newestOnTop={false}
-    closeOnClick
-    rtl={false}
-    pauseOnFocusLoss
-    draggable
-    pauseOnHover
-    theme="light"
-    transition= "Bounce"
-    />
-{/* Same as */}
-<ToastContainer />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition="Bounce"
+      />
+      {/* Same as */}
+      <ToastContainer />
       <div className="absolute inset-0 -z-10 h-full w-full bg-white [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#63e_100%)]"></div>
 
       <div className="  mycontainer">
@@ -141,6 +162,7 @@ const Manager = () => {
                   <th className="py-2">Site</th>
                   <th className="py-2">Username</th>
                   <th className="py-2">Password</th>
+                  <th className="py-2">Action</th>
                 </tr>
               </thead>
               <tbody className="">
@@ -152,15 +174,20 @@ const Manager = () => {
                           <a href={item.site} target="_blank">
                             {item.site}
                           </a>
-                          <div className="cursor-pointer size-7" onClick={()=>{copyText(item.site)}}>
+                          <div
+                            className="cursor-pointer size-7"
+                            onClick={() => {
+                              copyText(item.site);
+                            }}
+                          >
                             <lord-icon
                               src="https://cdn.lordicon.com/lyrrgrsl.json"
                               trigger="hover"
                               style={{
-                                "width": "25px",
-                                "height": "25px",
-                                "paddingTop": "3px",
-                                "paddingLeft": "3px",
+                                width: "25px",
+                                height: "25px",
+                                paddingTop: "3px",
+                                paddingLeft: "3px",
                               }}
                             ></lord-icon>
                           </div>
@@ -169,36 +196,64 @@ const Manager = () => {
                       <td className="lordiconcopy  text-center py-2 border border-white">
                         <div className="flex items-center justify-center">
                           <span>{item.username}</span>
-                          <div className="cursor-pointer size-7" onClick={()=>{copyText(item.username)}}>
+                          <div
+                            className="cursor-pointer size-7"
+                            onClick={() => {
+                              copyText(item.username);
+                            }}
+                          >
                             <lord-icon
                               src="https://cdn.lordicon.com/lyrrgrsl.json"
                               trigger="hover"
                               style={{
-                                "width": "25px",
-                                "height": "25px",
-                                "paddingTop": "3px",
-                                "paddingLeft": "3px",
+                                width: "25px",
+                                height: "25px",
+                                paddingTop: "3px",
+                                paddingLeft: "3px",
                               }}
                             ></lord-icon>
                           </div>
                         </div>
                       </td>
-                      <td className="lordiconcopy text-center  py-2 border border-white" >
+                      <td className="lordiconcopy text-center  py-2 border border-white">
                         <div className="flex items-center justify-center">
                           <span>{item.password}</span>
-                          <div className="cursor-pointer size-7" onClick={()=>{copyText(item.password)}}>
+                          <div
+                            className="cursor-pointer size-7"
+                            onClick={() => {
+                              copyText(item.password);
+                            }}
+                          >
                             <lord-icon
                               src="https://cdn.lordicon.com/lyrrgrsl.json"
                               trigger="hover"
                               style={{
-                                "width": "25px",
-                                "height": "25px",
-                                "paddingTop": "3px",
-                                "paddingLeft": "3px",
+                                width: "25px",
+                                height: "25px",
+                                paddingTop: "3px",
+                                paddingLeft: "3px",
                               }}
                             ></lord-icon>
                           </div>
                         </div>
+                      </td>
+                      <td className="justify-center text-center  py-2 border border-white">
+                        <span className="cursor-pointer mx-1" onClick={()=>{editPassword(item.id)}}>
+                          <script src="https://cdn.lordicon.com/lordicon.js"></script>
+                          <lord-icon
+                            src="https://cdn.lordicon.com/swcqkzdc.json"
+                            trigger="hover"
+                            style={{"width":"25px", "height":"25px"}}
+                          ></lord-icon>
+                        </span>
+                        <span className="cursor-pointer mx-1" onClick={()=>{deletePassword(item.id)}}>
+                          <script src="https://cdn.lordicon.com/lordicon.js"></script>
+                          <lord-icon
+                            src="https://cdn.lordicon.com/wpyrrmcq.json"
+                            trigger="hover"
+                            style={{"width":"25px", "height":"25px"}}
+                          ></lord-icon>
+                        </span>
                       </td>
                     </tr>
                   );
