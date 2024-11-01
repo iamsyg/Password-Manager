@@ -57,12 +57,18 @@ const Manager = () => {
 
 
   const deletePassword = (id) => {
-    let newPassword=passwordArray.filter(item=>{
-        return item.id!==id;
-      });
-  
-      setPasswordArray(newPassword);
-      localStorage.setItem("passwords", JSON.stringify(passwordArray.filter(item=>item.id!==id)));
+
+    let c=confirm("Delete password?")
+    if(c)
+    {
+        let newPassword=passwordArray.filter(item=>{
+            return item.id!==id;
+          });
+      
+          setPasswordArray(newPassword);
+          localStorage.setItem("passwords", JSON.stringify(passwordArray.filter(item=>item.id!==id)));
+    }
+    
   }
 
   const editPassword =(id) => {
