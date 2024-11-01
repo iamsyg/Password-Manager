@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 const Manager = () => {
   const ref = useRef();
@@ -49,38 +49,44 @@ const Manager = () => {
   };
 
   const savePassword = () => {
-    console.log(form);
-    setPasswordArray([...passwordArray, {...form, id:uuidv4()}]);
-    localStorage.setItem("password", JSON.stringify([...passwordArray, {...form, id:uuidv4()}]));
-    console.log([...passwordArray, form]);
+    if (form.site.length > 0 && form.password.length > 0) {
+      console.log(form);
+      setPasswordArray([...passwordArray, { ...form, id: uuidv4() }]);
+      localStorage.setItem(
+        "password",
+        JSON.stringify([...passwordArray, { ...form, id: uuidv4() }])
+      );
+      console.log([...passwordArray, form]);
+      setform({ site: "", username: "", password: "" });
+    } else {
+      toast("Error!");
+    }
   };
 
-
   const deletePassword = (id) => {
-
-    let c=confirm("Delete password?")
-    if(c)
-    {
-        let newPassword=passwordArray.filter(item=>{
-            return item.id!==id;
-          });
-      
-          setPasswordArray(newPassword);
-          localStorage.setItem("passwords", JSON.stringify(passwordArray.filter(item=>item.id!==id)));
-    }
-    
-  }
-
-  const editPassword =(id) => {
-    let t=passwordArray.filter(i=>i.id===id)
-    setform(t[0]);
-    let newPass=passwordArray.filter(item=>{
-        return item.id!==id;
+    let c = confirm("Delete password?");
+    if (c) {
+      let newPassword = passwordArray.filter((item) => {
+        return item.id !== id;
       });
-  
-      setPasswordArray(newPass);
-  }
-  
+
+      setPasswordArray(newPassword);
+      localStorage.setItem(
+        "passwords",
+        JSON.stringify(passwordArray.filter((item) => item.id !== id))
+      );
+    }
+  };
+
+  const editPassword = (id) => {
+    let t = passwordArray.filter((i) => i.id === id);
+    setform(t[0]);
+    let newPass = passwordArray.filter((item) => {
+      return item.id !== id;
+    });
+
+    setPasswordArray(newPass);
+  };
 
   const handleChange = (e) => {
     setform({ ...form, [e.target.name]: e.target.value });
@@ -103,9 +109,9 @@ const Manager = () => {
       />
       {/* Same as */}
       <ToastContainer />
-      <div className="absolute inset-0 -z-10 h-full w-full bg-white [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#63e_100%)]"></div>
+      {/* <div className="absolute inset-0 -z-10 h-full w-full bg-white [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#63e_100%)]"></div> */}
 
-      <div className="  mycontainer">
+      <div className="p-2 md:p-0  md:mycontainer min-h-[85.2vh]">
         <h1 className="text-center font-bold text-4xl">Enter Credentials</h1>
         <div className="flex text-black flex-col p-4 gap-8 items-center">
           <input
@@ -115,9 +121,9 @@ const Manager = () => {
             className="rounded-full border border-green-500 w-full p-4 py-1"
             type="text"
             name="site"
-            id=""
+            id="site"
           />
-          <div className="flex w-full justify-between gap-8">
+          <div className="flex flex-col md:flex-row w-full justify-between gap-8">
             <input
               value={form.username}
               onChange={handleChange}
@@ -125,7 +131,7 @@ const Manager = () => {
               className="rounded-full border border-green-500 w-full p-4 py-1"
               type="text"
               name="username"
-              id=""
+              id="username"
             />
             <div className="relative">
               <input
@@ -136,7 +142,7 @@ const Manager = () => {
                 className="rounded-full border border-green-500 w-full p-4 py-1"
                 type="password"
                 name="password"
-                id=""
+                id="password"
               />
               <span
                 className="absolute top-[4px] right-[3px] cursor-pointer"
@@ -162,7 +168,7 @@ const Manager = () => {
           <h1 className="text-xl font-bold py-4">Your passwords</h1>
           {passwordArray.length === 0 && <div>No passwords</div>}
           {passwordArray.length !== 0 && (
-            <table className="table-auto w-full rounded-xl overflow-hidden">
+            <table className="table-auto w-full rounded-xl overflow-hidden mb-10">
               <thead className="text-white bg-green-500">
                 <tr>
                   <th className="py-2">Site</th>
@@ -244,20 +250,30 @@ const Manager = () => {
                         </div>
                       </td>
                       <td className="justify-center text-center  py-2 border border-white">
-                        <span className="cursor-pointer mx-1" onClick={()=>{editPassword(item.id)}}>
+                        <span
+                          className="cursor-pointer mx-1"
+                          onClick={() => {
+                            editPassword(item.id);
+                          }}
+                        >
                           <script src="https://cdn.lordicon.com/lordicon.js"></script>
                           <lord-icon
                             src="https://cdn.lordicon.com/swcqkzdc.json"
                             trigger="hover"
-                            style={{"width":"25px", "height":"25px"}}
+                            style={{ width: "25px", height: "25px" }}
                           ></lord-icon>
                         </span>
-                        <span className="cursor-pointer mx-1" onClick={()=>{deletePassword(item.id)}}>
+                        <span
+                          className="cursor-pointer mx-1"
+                          onClick={() => {
+                            deletePassword(item.id);
+                          }}
+                        >
                           <script src="https://cdn.lordicon.com/lordicon.js"></script>
                           <lord-icon
                             src="https://cdn.lordicon.com/wpyrrmcq.json"
                             trigger="hover"
-                            style={{"width":"25px", "height":"25px"}}
+                            style={{ width: "25px", height: "25px" }}
                           ></lord-icon>
                         </span>
                       </td>
