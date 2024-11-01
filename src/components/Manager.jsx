@@ -3,9 +3,13 @@ import { useRef } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const Manager = () => {
   const ref = useRef();
-  const passwordRef=useRef();
+  const passwordRef = useRef();
   const [form, setform] = useState({ site: "", username: "", password: "" });
 
   const [passwordArray, setPasswordArray] = useState([]);
@@ -19,15 +23,30 @@ const Manager = () => {
   }, []);
 
   const showPassword = () => {
-    passwordRef.current.type="text";
+    passwordRef.current.type = "text";
     if (ref.current.src.includes("icons/eye.svg")) {
       ref.current.src = "icons/eye-crossed.svg";
-      passwordRef.current.type="password";
+      passwordRef.current.type = "password";
     } else {
       ref.current.src = "icons/eye.svg";
-      passwordRef.current.type="text";
+      passwordRef.current.type = "text";
     }
   };
+
+  const copyText=(text) => {
+    toast('Copied', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light"
+        });
+    navigator.clipboard.writeText(text);
+  }
+  
 
   const savePassword = () => {
     console.log(form);
@@ -42,6 +61,21 @@ const Manager = () => {
 
   return (
     <>
+    <ToastContainer
+    position="top-right"
+    autoClose={5000}
+    hideProgressBar={false}
+    newestOnTop={false}
+    closeOnClick
+    rtl={false}
+    pauseOnFocusLoss
+    draggable
+    pauseOnHover
+    theme="light"
+    transition= "Bounce"
+    />
+{/* Same as */}
+<ToastContainer />
       <div className="absolute inset-0 -z-10 h-full w-full bg-white [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#63e_100%)]"></div>
 
       <div className="  mycontainer">
@@ -99,27 +133,79 @@ const Manager = () => {
         </div>
         <div className="passwords">
           <h1 className="text-xl font-bold py-4">Your passwords</h1>
-          {passwordArray.length===0 && <div>No passwords</div>}
-          {passwordArray.length!==0 &&
-          <table className="table-auto w-full rounded-xl overflow-hidden">
-            <thead className="text-white bg-green-500">
-              <tr>
-                <th className="py-2">Site</th>
-                <th className="py-2">Username</th>
-                <th className="py-2">Password</th>
-              </tr>
-            </thead>
-            <tbody className="">
-                {passwordArray.map((item, index)=>{
-                    return <tr key={index}>
-                <td className="text-center w-32 py-2 border border-white"><a href={item.site} target="_blank">{item.site}</a></td>
-                <td className="text-center w-32 py-2 border border-white">{item.username}</td>
-                <td className="text-center w-32 py-2 border border-white">{item.password}</td>
-              </tr>
-            })}
-              
-            </tbody>
-          </table>}
+          {passwordArray.length === 0 && <div>No passwords</div>}
+          {passwordArray.length !== 0 && (
+            <table className="table-auto w-full rounded-xl overflow-hidden">
+              <thead className="text-white bg-green-500">
+                <tr>
+                  <th className="py-2">Site</th>
+                  <th className="py-2">Username</th>
+                  <th className="py-2">Password</th>
+                </tr>
+              </thead>
+              <tbody className="">
+                {passwordArray.map((item, index) => {
+                  return (
+                    <tr key={index}>
+                      <td className="lordiconcopy  text-center  py-2 border border-white">
+                        <div className="flex items-center justify-center">
+                          <a href={item.site} target="_blank">
+                            {item.site}
+                          </a>
+                          <div className="cursor-pointer size-7" onClick={()=>{copyText(item.site)}}>
+                            <lord-icon
+                              src="https://cdn.lordicon.com/lyrrgrsl.json"
+                              trigger="hover"
+                              style={{
+                                "width": "25px",
+                                "height": "25px",
+                                "paddingTop": "3px",
+                                "paddingLeft": "3px",
+                              }}
+                            ></lord-icon>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="lordiconcopy  text-center py-2 border border-white">
+                        <div className="flex items-center justify-center">
+                          <span>{item.username}</span>
+                          <div className="cursor-pointer size-7" onClick={()=>{copyText(item.username)}}>
+                            <lord-icon
+                              src="https://cdn.lordicon.com/lyrrgrsl.json"
+                              trigger="hover"
+                              style={{
+                                "width": "25px",
+                                "height": "25px",
+                                "paddingTop": "3px",
+                                "paddingLeft": "3px",
+                              }}
+                            ></lord-icon>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="lordiconcopy text-center  py-2 border border-white" >
+                        <div className="flex items-center justify-center">
+                          <span>{item.password}</span>
+                          <div className="cursor-pointer size-7" onClick={()=>{copyText(item.password)}}>
+                            <lord-icon
+                              src="https://cdn.lordicon.com/lyrrgrsl.json"
+                              trigger="hover"
+                              style={{
+                                "width": "25px",
+                                "height": "25px",
+                                "paddingTop": "3px",
+                                "paddingLeft": "3px",
+                              }}
+                            ></lord-icon>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </>
