@@ -16,9 +16,19 @@ Currently, two official plugins are available:
 
 ## Frontend
 
+- npm create vite@latest
+
+- npm i
+
+- npm install -D tailwindcss postcss autoprefixer
+
+- npx tailwindcss init -p
+
 - npm install --save react-toastify
 
 - npm install uuid
+
+- npm run dev
 
 
 
@@ -36,3 +46,5 @@ Currently, two official plugins are available:
 - npm install mongodb
 
 - npm install cors
+
+- nodemon server.js
