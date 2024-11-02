@@ -10,8 +10,29 @@ Currently, two official plugins are available:
 
 
 
-# Dependencies
+### Dependencies
+
+
+
+## Frontend
 
 - npm install --save react-toastify
 
 - npm install uuid
+
+
+
+
+## Backemd
+
+- npm init -y
+
+- npm install express@4
+
+- npm i dotenv 
+
+- npm i body-parser
+
+- npm install mongodb
+
+- npm install cors
